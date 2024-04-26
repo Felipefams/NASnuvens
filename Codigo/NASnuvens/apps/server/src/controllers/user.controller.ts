@@ -6,6 +6,6 @@ export class UserController {
 
     async saveUserFiles(req: RestRequest, res: RestResponse): Promise<void> {
         const { path, files } = req.body;
-        await this.handleFilesUseCase.saveUserFiles(path, files);
+        await this.handleFilesUseCase.saveUserFile(path, files);
     }
 }

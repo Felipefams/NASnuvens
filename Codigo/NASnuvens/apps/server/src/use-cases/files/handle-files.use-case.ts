@@ -3,7 +3,7 @@ import { HandleFiles } from "./handle-files";
 
 export class HandleFilesUseCase implements HandleFiles {
     constructor(private filesProvider: FilesProviderPort) { }
-    async saveUserFiles(path: string, files: File[]): Promise<void> {
+    async saveUserFile(path: string, files: File): Promise<void> {
         await this.filesProvider.saveFile(path, files);
     }
     async getUserFiles(userId: string): Promise<File[]> {

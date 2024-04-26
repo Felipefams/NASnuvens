@@ -1,3 +1,3 @@
 export interface FilesProviderPort {
-    saveFile(path: string, file: File[]): Promise<boolean>;
+    saveFile(path: string, file: File): Promise<boolean>;
 }
