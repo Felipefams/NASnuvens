@@ -1,5 +1,5 @@
 import { UserController } from "controllers/user.controller";
-import { Router } from "express";
+import { Request, Response, Router } from "express";
 import { UserPaths } from "@repo/types";
 
 export class UserRoutes {
@@ -10,8 +10,8 @@ export class UserRoutes {
     }
 
     registerRoutes() {
-        this.router.post(UserPaths.FILES, async (req, res) => {
-            await this.userController.saveUserFiles(req, res);
+        this.router.post(UserPaths.FILES, async (req: Request, res: Response) => {
+            await this.userController.saveUserFiles(req);
             res.send('Files saved').status(200);
         });
     }

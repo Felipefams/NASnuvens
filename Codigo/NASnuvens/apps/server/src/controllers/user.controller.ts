@@ -4,8 +4,8 @@ import { RestRequest, RestResponse } from "./types";
 export class UserController {
     constructor(private handleFilesUseCase: HandleFiles) {}
 
-    async saveUserFiles(req: RestRequest, res: RestResponse): Promise<void> {
+    async saveUserFiles(req: RestRequest): Promise<void> {
         const { path, files } = req.body;
-        await this.handleFilesUseCase.saveUserFile(path, files);
+        return await this.handleFilesUseCase.saveUserFile(path, files);
     }
 }

@@ -1,9 +1,11 @@
 import express, { Express } from "express";
+import * as fileUpload from "express-fileupload";
 
 
 export const startExpress = () => {
   const app = express();
   app.use(express.json());
+  app.use(fileUpload.default());
   return app;
 };
 
