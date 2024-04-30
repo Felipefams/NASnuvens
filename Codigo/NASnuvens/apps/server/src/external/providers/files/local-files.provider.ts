@@ -1,18 +1,40 @@
+import { FileType } from "controllers/types";
 import { FilesProviderPort } from "../../../use-cases/ports/files-provider.port";
 import * as fs from "fs";
 
 export class LocalFilesProvider implements FilesProviderPort {
-    async saveFile(path: string, file: File): Promise<boolean> {
+    private readonly basePath = "uploads" as const;
+    async saveFile(path: string, files: FileType[]): Promise<boolean> {
         try {
-            if (!fs.existsSync(path)) {
-                fs.mkdirSync(path, { recursive: true });
-            }
-            const buffer = Buffer.from(await file.arrayBuffer());
+            const folderPath = this.getFolderPath(path);
 
-            fs.writeFileSync(`${path}/${file.name}`, buffer);
+            const fs_writeFile = fs.promises.writeFile;
+
+            let filesPromises = files.map((file) => {
+                const finalPath = `${folderPath}/${file.name}` as const;
+                if (fs.existsSync(finalPath))
+                    return;
+
+                return fs_writeFile(finalPath, file.data);
+            });
+
+            await Promise.allSettled(filesPromises);
+
             return true;
         } catch (error) {
             throw new Error(`Error saving file: ${error}`);
+        }
+    }
+
+    private getFolderPath(path: string): string {
+        try {
+            const folderPath = `${this.basePath}/${path}` as const;
+            if (!fs.existsSync(folderPath))
+                fs.mkdirSync(folderPath, { recursive: true });
+
+            return folderPath;
+        } catch (error) {
+            throw new Error(`Error getting folder path: ${error}`);
         }
     }
 }
