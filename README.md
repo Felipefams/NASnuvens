@@ -1,20 +1,25 @@
-# [NAS Nuvens]
+# NAS Nuvens
 
-[Escreva um ou dois  parágrafo resumindo o objetivo do seu projeto.]
+O NasNuvens é um sistema de backup automatizado que sincroniza arquivos de dispositivos móveis com um NAS local e armazenamento na nuvem. Operando na mesma rede Wi-Fi residencial, ele oferece um processo simplificado e transparente, assegurando a proteção contínua dos dados do usuário.
 
 ## Alunos integrantes da equipe
 
-* [Camila]
-* [Euller]
-* [Felipe Augusto]
-* [Pedro Henrique]
-* [Victor]
+* Camila Lopes
+* Euller Nunes
+* Felipe Augusto
+* Pedro Henrique
+* Victor Lopes
 
 ## Professores responsáveis
 
-* [Nome completo do professor 1]
-* [Nome completo do professor 2]
+* Felipe Domingos da Cunha
+* Matheus Alcântara Souza
+* Pedro Henrique Ramos Costa
+* Ricardo Carlini Sperandio
 
 ## Instruções de utilização
 
-[Assim que a primeira versão do sistema estiver disponível, deverá complementar com as instruções de utilização. Descreva como instalar eventuais dependências e como executar a aplicação.]
+1. Navegue até a pasta "NasNuvens"
+2. Execute o comando "npm install"
+3. Execute o comando "npm run dev"
+4. Utilizando um programa de requisições HTTP, como o Postman, faça requisições como descrito no arquivo "client.http" dentro de "server".
