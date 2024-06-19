@@ -5,14 +5,6 @@ module.exports = {
     extend: {
       colors: {
         slate_gray: "#343434",
-        panel_green: "#37FA77",
-        panel_blue: "#1652EA",
-        panel_blue_opacity: "rgba(22, 82, 234, 0.2)",
-        panel_green_darker: "#37fa7733",
-        panel_green_opacity: "#37fa7799",
-        panel_red: "#FF5858",
-        panel_yellow: "#FFD972",
-        panel_cyan: "#CCE6F4",
         background_color: "#000",
         modal_background: "rgba(0, 0, 0, 0.8)",
         modal_background_darker: "rgba(0, 0, 0, 0.95)",
