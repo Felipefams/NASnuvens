@@ -1,19 +1,17 @@
 cff-version: 1.0.1
 message: Please cite this software using these metadata.
-title: 
+title: NASnuvens
 authors:
-  - family-names: 
-    given-names: 
-  - family-names: 
-    given-names: 
-  - family-names: 
-    given-names: 
-  - family-names: 
-    given-names: 
-  - family-names: 
-    given-names: 
-  - family-names: 
-    given-names:
+  - family-names: Lopes
+    given-names: Camila
+  - family-names: Silva
+    given-names: Euller
+  - family-names: Silva
+    given-names: Felipe
+  - family-names: Costa
+    given-names: Pedro
+  - family-names: Araujo
+    given-names: Victor
   - name-suffix: Professor
     affiliation: PUC Minas
     family-names: 
@@ -23,9 +21,11 @@ authors:
     family-names: 
     given-names: 
 keywords:
-  - 
-  - 
-repository-code: 
+  - NAS
+  - Mobile App
+  - Backup
+  - Cloud
+repository-code: https://github.com/ICEI-PUC-Minas-CC-TI/plmg-cc-ti5-2024-1-ghost/tree/master
 license: CC-BY-4.0
 version: 1.0.0
 date-released: 2022-07-14
