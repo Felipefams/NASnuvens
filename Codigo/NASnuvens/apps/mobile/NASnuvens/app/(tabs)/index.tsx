@@ -1,56 +1,90 @@
 import { Image, StyleSheet, Platform } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+
+import { useEffect, useState } from 'react';
+import { View, Text } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
+import NetInfo from '@react-native-community/netinfo';
+import * as Network from 'expo-network';
+import * as Device from 'expo-device';
+import Constants from 'expo-constants';
+import * as Application from 'expo-application';
+import * as DocumentPicker from 'expo-document-picker';
+import { TouchableOpacity } from 'react-native';
+import { PickedDocumentCard } from '@/components/PickedDocumentCard';
+import { FileType, MimeType } from '@/types/files';
+import * as FileSystem from 'expo-file-system';
+import { DocumentPickerAsset } from 'expo-document-picker';
+import { Colors } from '@/constants/Colors';
 
 export default function HomeScreen() {
+  const [pickedDocuments, setPickedDocuments] = useState<DocumentPickerAsset[]>([]);
+
+  //id = deviceName + macAddress
+  console.log("Constants", Constants.deviceName)
+  console.log("deviceId", Application.getAndroidId())
+
+  const pickDocuments = async () => {
+    const picked = await DocumentPicker.getDocumentAsync({
+      type: "*/*",
+      multiple: true,
+      copyToCacheDirectory: true
+    })
+    setPickedDocuments(picked.assets as DocumentPickerAsset[]);
+    console.log("picked", picked);
+  }
+
   return (
     <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
+      headerBackgroundColor={{ light: '#f4f4f4', dark: '#f4f4f4' }}
       headerImage={
         <Image
-          source={require('@/assets/images/partial-react-logo.png')}
+          source={require('@/assets/images/NASnuvensLogo.png')}
           style={styles.reactLogo}
         />
       }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
+      <View style={styles.buttonView}>
+        <TouchableOpacity style={styles.pickContentButton} onPress={pickDocuments}>
+          <Text>
+            Pick Documents
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.documentCardView}>
+        {pickedDocuments && pickedDocuments.length > 0 &&
+          pickedDocuments.map(doc => {
+            return <PickedDocumentCard
+              key={doc.name}
+              uri={doc.uri}
+              name={doc.name}
+              mimeType={doc.mimeType as MimeType}
+            />
+          })
+        }
+      </View>
     </ParallaxScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  documentCardView: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: "space-between",
+    gap: 8,
+  },
+  buttonView: {
+    alignItems: 'center',
+    marginVertical: 16,
+  },
+  pickContentButton: {
+    backgroundColor: '#A1CEDC',
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    elevation: 3,
+  },
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -61,10 +95,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+    alignSelf: 'center',
+    margin: 'auto',
   },
 });
