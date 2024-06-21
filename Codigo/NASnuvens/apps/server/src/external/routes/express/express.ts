@@ -1,9 +1,11 @@
 import express, { Express } from "express";
 import * as fileUpload from "express-fileupload";
+import cors from "cors";
 
 
 export const startExpress = () => {
   const app = express();
+  app.use(cors({credentials: true, origin: true}));
   app.use(express.json());
   app.use(fileUpload.default());
   return app;

@@ -17,23 +17,84 @@ import { FileType, MimeType } from '@/types/files';
 import * as FileSystem from 'expo-file-system';
 import { DocumentPickerAsset } from 'expo-document-picker';
 import { Colors } from '@/constants/Colors';
+import { postFiles } from '@/api/files';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function HomeScreen() {
   const [pickedDocuments, setPickedDocuments] = useState<DocumentPickerAsset[]>([]);
+  const [isFileLoading, setIsFileLoading] = useState(false);
+  const [pickedDocumentNamesSet, setPickedDocumentNamesSet] = useState<Set<string>>(new Set());
 
-  //id = deviceName + macAddress
-  console.log("Constants", Constants.deviceName)
-  console.log("deviceId", Application.getAndroidId())
 
   const pickDocuments = async () => {
     const picked = await DocumentPicker.getDocumentAsync({
       type: "*/*",
       multiple: true,
       copyToCacheDirectory: true
+    });
+    const documentsToPick = (picked.assets as DocumentPickerAsset[]).filter((doc) => {
+      return !pickedDocumentNamesSet.has(doc.name);
     })
-    setPickedDocuments(picked.assets as DocumentPickerAsset[]);
-    console.log("picked", picked);
+    setPickedDocuments(prev => prev.concat(documentsToPick));
+    (picked.assets as DocumentPickerAsset[]).forEach((doc) => {
+      setPickedDocumentNamesSet((prev) => {
+        prev.add(doc.name);
+        return prev;
+      })
+    })
+
+    await AsyncStorage.setItem('files', JSON.stringify(picked.assets))
+
+
+
+    /*
+    const filesArray = (picked.assets as DocumentPickerAsset[]).map((file) => {
+      const fileToSend = {
+        name: file.name,
+        uri: file.uri,
+        type: file.mimeType,
+        size: file.size,
+      }
+      return fileToSend;
+    });
+    await postFiles(filesArray, Application.getAndroidId())
+    */
   }
+
+  const sendFiles = async () => {
+    const filesArray = pickedDocuments.map((file) => {
+      const fileToSend = {
+        name: file.name,
+        uri: file.uri,
+        type: file.mimeType,
+        size: file.size,
+      }
+      return fileToSend;
+    });
+    await postFiles(filesArray, Application.getAndroidId())
+  }
+
+  const removeDocument = (name: string) => {
+    setPickedDocuments(prev => prev.filter(doc => doc.name !== name))
+    setPickedDocumentNamesSet(prev => {
+      prev.delete(name)
+      return prev
+    })
+    AsyncStorage.setItem('files', JSON.stringify(pickedDocuments.filter(doc => doc.name !== name)));
+  }
+
+  useEffect(() => {
+    const getFiles = async () => {
+      setIsFileLoading(true)
+      const files = await AsyncStorage.getItem('files')
+      if (files) {
+        const filesArray = JSON.parse(files)
+        setPickedDocuments(filesArray)
+      }
+      setIsFileLoading(false)
+    }
+    getFiles()
+  }, [])
 
   return (
     <ParallaxScrollView
@@ -44,22 +105,35 @@ export default function HomeScreen() {
           style={styles.reactLogo}
         />
       }>
-      <View style={styles.buttonView}>
-        <TouchableOpacity style={styles.pickContentButton} onPress={pickDocuments}>
-          <Text>
-            Pick Documents
-          </Text>
-        </TouchableOpacity>
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <View style={styles.buttonView}>
+          <TouchableOpacity style={styles.pickContentButton} onPress={pickDocuments}>
+            <Text>
+              Pick Documents
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.buttonView}>
+          <TouchableOpacity style={styles.pickContentButton} onPress={sendFiles}>
+            <Text>
+              Backup them'all!
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
       <View style={styles.documentCardView}>
         {pickedDocuments && pickedDocuments.length > 0 &&
-          pickedDocuments.map(doc => {
-            return <PickedDocumentCard
-              key={doc.name}
-              uri={doc.uri}
-              name={doc.name}
-              mimeType={doc.mimeType as MimeType}
-            />
+          pickedDocuments.map((doc, index) => {
+            return (
+              <TouchableOpacity key={index} onPress={() => removeDocument(doc.name)}>
+                <PickedDocumentCard
+                  key={doc.name}
+                  uri={doc.uri}
+                  name={doc.name}
+                  mimeType={doc.mimeType as MimeType}
+                />
+              </TouchableOpacity>
+            )
           })
         }
       </View>

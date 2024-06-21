@@ -13,6 +13,6 @@ export class UserController {
             files = files.concat(req.files[key]);
         }
 
-        return await this.handleFilesUseCase.saveUserFile(path, files);
+        return await this.handleFilesUseCase.saveUserFile(path, files); 
     }
 }

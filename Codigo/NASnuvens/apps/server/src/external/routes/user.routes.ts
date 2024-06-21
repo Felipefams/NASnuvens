@@ -12,8 +12,12 @@ export class UserRoutes {
 
     registerRoutes() {
         this.router.post(UserPaths.FILES, async (req: Request, res: Response) => {
-            await this.userController.saveUserFiles(req as RestRequest);
-            res.send('Files saved').status(200);
+            try {
+                await this.userController.saveUserFiles(req as RestRequest);
+                res.send('Files saved').status(200);
+            } catch (error) {
+                res.send('Error saving files').status(500);
+            }
         });
     }
 }
