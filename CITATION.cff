@@ -14,12 +14,20 @@ authors:
     given-names: Victor
   - name-suffix: Professor
     affiliation: PUC Minas
-    family-names: 
-    given-names: 
+    family-names: Sperandio
+    given-names: Ricardo
   - name-suffix: Professor
     affiliation: PUC Minas
-    family-names: 
-    given-names: 
+    family-names: Souza
+    given-names: Matheus
+  - name-suffix: Professor
+    affiliation: PUC Minas
+    family-names: Costa
+    given-names: Pedro Henrique
+  - name-suffix: Professor
+    affiliation: PUC Minas
+    family-names: Cunha
+    given-names: Felipe
 keywords:
   - NAS
   - Mobile App
